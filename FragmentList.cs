@@ -152,7 +152,15 @@ public class FragmentList<T> : IList<T>, IList, IReadOnlyList<T>
     {
         ensureAtLeastOneArray();
         var arr = _bucket[_bucket.Count - 1];
-        arr.Add(item);
+        try
+        {
+            arr.Add(item);
+        } catch(OutOfMemoryException ex)
+        {
+            arr = new List<T>();
+            _bucket.Add(arr);
+            arr.Add(item);
+        }
         _count++;
     }
 
